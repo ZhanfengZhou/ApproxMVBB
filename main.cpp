@@ -21,15 +21,13 @@ int data_load(char * idx, std::vector<double> &x, std::vector<double> &y, std::v
   std::vector<unsigned long> shape;
   bool fortran_order;
   std::vector<double> data;
-  std::cout<< "???" << std::endl;
+
   std::vector<const char*> ap {
-    
-    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/acc_",
-    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/acc_",
-    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/acc_",
-    
+    "/home/runze/src_general/RE3D/img",
+    "/home/runze/src_general/RE3D/img",
+    "/home/runze/src_general/RE3D/img",
   };
-  std::cout<< "???" << std::endl;
+
   std::vector<char *> allpaths;
 
   allpaths.resize(3); 
@@ -40,15 +38,15 @@ int data_load(char * idx, std::vector<double> &x, std::vector<double> &y, std::v
   
   std::strcpy(allpaths[0], ap[0]);
   std::strcat(allpaths[0], idx);
-  std::strcat(allpaths[0], "_x.npy");
+  std::strcat(allpaths[0], "x.npy");
 
   std::strcpy(allpaths[1], ap[1]);
   std::strcat(allpaths[1], idx);
-  std::strcat(allpaths[1], "_y.npy");
+  std::strcat(allpaths[1], "y.npy");
 
   std::strcpy(allpaths[2], ap[2]);
   std::strcat(allpaths[2], idx);
-  std::strcat(allpaths[2], "_z.npy");
+  std::strcat(allpaths[2], "z.npy");
 
   std::cout<<"???"<<std::endl;
   
@@ -72,8 +70,6 @@ int data_load(char * idx, std::vector<double> &x, std::vector<double> &y, std::v
   for (int i = 0; i < 3; i++) {
     free(allpaths[i]);
   }
-
-  std::cout<<"???"<<std::endl;
 
   return 0;
 }
@@ -129,14 +125,12 @@ int mvbb(char * idx, std::vector<double> vec_x, std::vector<double> vec_y, std::
     char f2[100];
     char f3[100];
     char f4[100];
-    
-    std::cout<<"!!!"<<std::endl;
 
-    std::strcpy(f0, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/m_minPoint");
-    std::strcpy(f1, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/m_maxPoint");
-    std::strcpy(f2, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/trans_matrix_");
-    std::strcpy(f3, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/trans_matrix_");
-    std::strcpy(f4, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/trans_matrix_");
+    std::strcpy(f0, "/home/runze/src_general/ApproxMVBB/example/approxMVBB/src/m_minPoint");
+    std::strcpy(f1, "/home/runze/src_general/ApproxMVBB/example/approxMVBB/src/m_maxPoint");
+    std::strcpy(f2, "/home/runze/src_general/ApproxMVBB/example/approxMVBB/src/trans_matrix_");
+    std::strcpy(f3, "/home/runze/src_general/ApproxMVBB/example/approxMVBB/src/trans_matrix_");
+    std::strcpy(f4, "/home/runze/src_general/ApproxMVBB/example/approxMVBB/src/trans_matrix_");
 
     std::strcat(f0, idx);
     std::strcat(f0, ".npy");
@@ -152,8 +146,6 @@ int mvbb(char * idx, std::vector<double> vec_x, std::vector<double> vec_y, std::
 
     std::strcat(f4, idx);
     std::strcat(f4, "z.npy");
-
-    std::cout<<"!!!."<<std::endl;
     
 
     data_save(minpt, f0);
@@ -176,7 +168,7 @@ int main(int argc, char** argv)
 
     int num_of_objects = 2;
 
-    for (int i = 1; i <= num_of_objects; i++) {
+    for (int i = 0; i < num_of_objects; i++) {
       idx[0] = (char)(i + 48); 
       data_load(idx, vec_x, vec_y, vec_z);
       mvbb(idx, vec_x, vec_y, vec_z);
