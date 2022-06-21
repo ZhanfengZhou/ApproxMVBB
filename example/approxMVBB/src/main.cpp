@@ -21,16 +21,15 @@ int data_load(char * idx, std::vector<double> &x, std::vector<double> &y, std::v
   std::vector<unsigned long> shape;
   bool fortran_order;
   std::vector<double> data;
-  std::cout<< "???" << std::endl;
   std::vector<const char*> ap {
     
-    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/acc_",
-    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/acc_",
-    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/acc_",
+    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/object_",
+    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/object_",
+    "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/input/object_",
     
   };
-  std::cout<< "???" << std::endl;
   std::vector<char *> allpaths;
+  std::cout<<"Start estimate MVBB of each object:"<<std::endl;
 
   allpaths.resize(3); 
 
@@ -40,20 +39,20 @@ int data_load(char * idx, std::vector<double> &x, std::vector<double> &y, std::v
   
   std::strcpy(allpaths[0], ap[0]);
   std::strcat(allpaths[0], idx);
-  std::strcat(allpaths[0], "_x.npy");
+  std::strcat(allpaths[0], "_x_cleaned.npy");
 
   std::strcpy(allpaths[1], ap[1]);
   std::strcat(allpaths[1], idx);
-  std::strcat(allpaths[1], "_y.npy");
+  std::strcat(allpaths[1], "_y_cleaned.npy");
 
   std::strcpy(allpaths[2], ap[2]);
   std::strcat(allpaths[2], idx);
-  std::strcat(allpaths[2], "_z.npy");
+  std::strcat(allpaths[2], "_z_cleaned.npy");
 
-  std::cout<<"???"<<std::endl;
   
   int count = 0;
 
+  std::cout<<"Reading point-cloud 3D file for each object"<<std::endl;
   for (auto path : allpaths) {
     shape.clear();
     data.clear();
@@ -69,11 +68,12 @@ int data_load(char * idx, std::vector<double> &x, std::vector<double> &y, std::v
     count++;
   }
 
+  std::cout<<"Read finished"<<std::endl;
+
   for (int i = 0; i < 3; i++) {
     free(allpaths[i]);
   }
 
-  std::cout<<"???"<<std::endl;
 
   return 0;
 }
@@ -130,7 +130,7 @@ int mvbb(char * idx, std::vector<double> vec_x, std::vector<double> vec_y, std::
     char f3[100];
     char f4[100];
     
-    std::cout<<"!!!"<<std::endl;
+    std::cout<<"MVBB finished, start saving results"<<std::endl;
 
     std::strcpy(f0, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/m_minPoint");
     std::strcpy(f1, "/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/m_maxPoint");
@@ -153,7 +153,7 @@ int mvbb(char * idx, std::vector<double> vec_x, std::vector<double> vec_y, std::
     std::strcat(f4, idx);
     std::strcat(f4, "z.npy");
 
-    std::cout<<"!!!."<<std::endl;
+    std::cout<<"Saving results"<<std::endl;
     
 
     data_save(minpt, f0);
@@ -161,6 +161,8 @@ int mvbb(char * idx, std::vector<double> vec_x, std::vector<double> vec_y, std::
     data_save(trans_matrix_ln0, f2);
     data_save(trans_matrix_ln1, f3);
     data_save(trans_matrix_ln2, f4);
+
+    std::cout<<"Saved, all done"<<std::endl;
 
     return 0;
 }
@@ -174,9 +176,9 @@ int main(int argc, char** argv)
 
     char idx[] = "0";
 
-    int num_of_objects = 2;
+    int num_of_objects = 6;
 
-    for (int i = 1; i <= num_of_objects; i++) {
+    for (int i = 0; i < num_of_objects; i++) {
       idx[0] = (char)(i + 48); 
       data_load(idx, vec_x, vec_y, vec_z);
       mvbb(idx, vec_x, vec_y, vec_z);
