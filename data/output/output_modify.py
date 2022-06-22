@@ -28,7 +28,46 @@ def MVBB_results(object_idx):
     
     if object_idx == 0:
         Rotate_for0 = Rotation.from_euler('YX', [90, 180], degrees=True)
-        
+        Rotate_new =  Rotate * Rotate_for0
+        trans_matrix_new = Rotate_new.as_matrix()
+
+        euler_angle_new = Rotate_new.as_euler('ZYZ', degrees=True)
+        print(f'new euler angle for object_0 : {euler_angle_new}')
+    elif object_idx == 1:
+        Rotate_for1 = Rotation.from_euler('YZ', [-90, -90], degrees=True)
+        Rotate_new =  Rotate * Rotate_for1
+        trans_matrix_new = Rotate_new.as_matrix()
+
+        euler_angle_new = Rotate_new.as_euler('ZYZ', degrees=True)
+        print(f'new euler angle for object_1 : {euler_angle_new}')
+    elif object_idx == 2:
+        Rotate_for2 = Rotation.from_euler('YZ', [90, 180], degrees=True)
+        Rotate_new =  Rotate * Rotate_for2
+        trans_matrix_new = Rotate_new.as_matrix()
+
+        euler_angle_new = Rotate_new.as_euler('ZYZ', degrees=True)
+        print(f'new euler angle for object_2 : {euler_angle_new}')
+    elif object_idx == 3:
+        Rotate_for3 = Rotation.from_euler('XZ', [90, 180], degrees=True)
+        Rotate_new =  Rotate * Rotate_for3
+        trans_matrix_new = Rotate_new.as_matrix()
+
+        euler_angle_new = Rotate_new.as_euler('ZYZ', degrees=True)
+        print(f'new euler angle for object_3 : {euler_angle_new}')
+    elif object_idx == 4:
+        #Rotate_for4 = Rotation.from_euler('X', [0], degrees=True)
+        #Rotate_new =  Rotate * Rotate_for4
+        trans_matrix_new = trans_matrix
+
+        euler_angle_new = euler_angle
+        print(f'new euler angle for object_4 : {euler_angle_new}')
+    elif object_idx == 5:
+        Rotate_for5 = Rotation.from_euler('XZ', [90, 90], degrees=True)
+        Rotate_new =  Rotate * Rotate_for5
+        trans_matrix_new = Rotate_new.as_matrix()
+
+        euler_angle_new = Rotate_new.as_euler('ZYZ', degrees=True)
+        print(f'new euler angle for object_5 : {euler_angle_new}')
 
 
     up2 = max_point
@@ -67,7 +106,7 @@ def MVBB_results(object_idx):
     
     mesh = o3d.geometry.TriangleMesh.create_coordinate_frame()
     mesh.scale(0.1, center=mesh.get_center())
-    mesh_r = copy.deepcopy(mesh).rotate(trans_matrix)
+    mesh_r = copy.deepcopy(mesh).rotate(trans_matrix_new)
     #mesh_r.scale(0.1, center=mesh_r.get_center())
     mesh_mv = copy.deepcopy(mesh_r).translate(center_point, relative=False)
 
@@ -77,12 +116,22 @@ def MVBB_results(object_idx):
     print("visualizing...")
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(object)
-    return mesh, pcd, line_set, mesh_mv
     #o3d.visualization.draw_geometries([pcd, line_set, mesh_mv])
-    
+
     #np.save(f"/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/object{object_idx}_center_point.npy", center_point)
     #np.save(f"/home/zhanfeng/camera_ws/src/ApproxMVBB/data/output/object{object_idx}_transform_matrix.npy", trans_matrix)
+    
+    lines = [f'Euler angle for object_{object_idx}:    ', f'{euler_angle_new}','\n', f'Center point for object_{object_idx}:    ', f'{center_point}', '\n\n\n']
+    if object_idx == 0:
+        with open('MVBB_output.txt', 'w') as f:
+            f.writelines(lines)
+    else:
+        with open('MVBB_output.txt', 'a') as f:
+            f.writelines(lines)
+        
 
+    return mesh, pcd, line_set, mesh_mv
+    
 
 #num_of_objects = 6
 #for i in range(num_of_objects):
